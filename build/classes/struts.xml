@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN" "http://struts.apache.org/dtds/struts-2.1.dtd">
+<struts>
+<constant name="struts.devMode" value="true" />
+<constant name="struts.i18n.encoding" value="UTF-8" />
+<constant name="struts.multipart.saveDir" value="struts" />
+<constant name="struts.enable.DaynamicMethodInvocation" value="false"/>
+<constant name="struts.allowed.action.names" value="[a-zA-Z0-9._/\-]*" />
+<constant name="struts.action.extension" value="htm" />
+<constant name="struts.i18n.encoding" value="UTF-8"/>
+
+<include file="struts/struts_admin.xml"></include> 
+<include file="struts/struts_enterprise.xml"></include> 
+
+<package name="default" namespace="/" extends="struts-default"> 
+	<result-types>
+			<result-type name="json" class="org.apache.struts2.json.JSONResult" />
+	</result-types>
+    <interceptors>
+        <interceptor-stack name="secureDefaultStack">
+            <interceptor-ref name="defaultStack">
+                <param name="params.excludeParams">(.*\.|^|.*|\[('|"))(c|C)lass(\.|('|")]|\[).*,^dojo\..*,^struts\..*,^session\..*,^request\..*,^application\..*,^servlet(Request|Response)\..*,^parameters\..*,^action:.*,^method:.*</param>
+            </interceptor-ref>
+        </interceptor-stack>
+    </interceptors>
+    <default-interceptor-ref name="secureDefaultStack" /> 
+    <default-action-ref name="notFound" /> 
+    <global-results>
+            <result name="error">/error.jsp</result>
+    </global-results>
+    <global-exception-mappings>
+           <exception-mapping exception="java.lang.Exception" result="error"/>
+   	</global-exception-mappings> 
+    <action name="notFound">
+		<result>/notfound.jsp</result>
+	</action>
+</package> 
+
+</struts>
